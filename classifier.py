@@ -65,12 +65,12 @@ def decisionTree(data, target, criterion="gini", minWeightFractionLeaf=0, minSam
     printHeader("Decision Tree", "Fold 5", criterion)
     printFold(acc, precision, recall, time_train, time_test)
 
-    tree.export_graphviz(classifier, out_file="treePNG/tree-cir_%s-mWFL_%s-mSL_%s-mD_%s.dot" % (criterion, minWeightFractionLeaf, minSamplesLeaf, maxDepth))
+    # tree.export_graphviz(classifier, out_file="treePNG/tree-cir_%s-mWFL_%s-mSL_%s-mD_%s.dot" % (criterion, minWeightFractionLeaf, minSamplesLeaf, maxDepth))
     return
 
 def randomForrest(data, target):
-    n_estimators = [20, 50]
-    max_features = ["sqrt", "log2", 3]
+    n_estimators = [500, 5000]
+    max_features = ["sqrt"]
 
     for e in n_estimators:
         for f in max_features:
@@ -93,7 +93,7 @@ def SVC(data, target):
     return
 
 def LinarSVC(data, target):
-    classifier = svm.LinearSVC()
+    classifier = svm.LinearSVC(C=10)
 
     # Fold 5
     acc, precision, recall, time_train, time_test = fold5(data, target, classifier)

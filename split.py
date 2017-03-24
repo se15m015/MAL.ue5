@@ -58,7 +58,7 @@ def fold5(data, target, classifier):
         time_trainSum.append(time_train)
         time_testSum.append(time_test)
 
-        print("Confusion Matrix")
-        print(confusion_matrix)
+        # print("Confusion Matrix")
+        # print(confusion_matrix)
 
     return [accSum, precisionSum, recallSum, time_trainSum, time_testSum]

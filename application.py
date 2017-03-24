@@ -2,6 +2,9 @@
 import numpy as np
 from sklearn import datasets
 from sklearn.utils import shuffle
+
+from load import loadAmazonTrain, loadCongressTrain
+from load import loadAmazonTest
 from util import getRandomState
 from classifier import kNN, decisionTreeGini, decisionTreeEntropy, decisionTreePrePruning1, decisionTreePrePruning2, randomForrest, SVC, LinarSVC
 from classifier import naiveBayes
@@ -49,15 +52,13 @@ def loadBreastCancer():
     return [data, target]
 
 
+dataset = loadCongressTrain()
+runAllClassifier(dataset.data, dataset.target)
+# dataset = loadAmazonTrain()
+# LinarSVC(dataset.data, dataset.target)
+# randomForrest(dataset.data, dataset.target)
 
-[data, target] = loadIris()
-runAllClassifier(data, target)
 
-[data, target] = loadDigits()
-runAllClassifier(data, target)
-
-[data, target] = loadBreastCancer()
-runAllClassifier(data, target)
 
 
 
