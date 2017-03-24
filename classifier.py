@@ -82,6 +82,16 @@ def randomForrest(data, target):
             printRandomTreeFold(e, f, accSum, precisionSum, recallSum, time_trainSum, time_testSum)
     return
 
+def randomForrestParams(data, target,e = 100,f = "sqrt"):
+
+    classifier = ensemble.RandomForestClassifier(n_estimators=e, max_features=f)
+
+    # Fold 5
+    accSum, precisionSum, recallSum, time_trainSum, time_testSum = fold5(data, target, classifier)
+
+    printRandomTreeFold(e, f, accSum, precisionSum, recallSum, time_trainSum, time_testSum)
+    return
+
 def SVC(data, target):
     classifier = svm.SVC()
 
@@ -92,13 +102,13 @@ def SVC(data, target):
     printFold(acc, precision, recall, time_train, time_test)
     return
 
-def LinarSVC(data, target):
-    classifier = svm.LinearSVC(C=10)
+def LinarSVC(data, target, penaltyC=1):
+    classifier = svm.LinearSVC(C=penaltyC)
 
     # Fold 5
     acc, precision, recall, time_train, time_test = fold5(data, target, classifier)
 
-    printHeader("LinarSVC", "Fold 5")
+    printHeader("LinarSVC", "Fold 5", "penaltyC: "+str(penaltyC))
     printFold(acc, precision, recall, time_train, time_test)
 
     return

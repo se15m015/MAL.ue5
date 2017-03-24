@@ -105,8 +105,8 @@ def loadKddTrain():
     df = pd.read_csv(filename, header=0)
 
     original_headers = list(df.columns.values)
-    target_names = df.get_values()[:, -1]
-    feature_names = original_headers[1:-1]
+    target_names = df["TARGET_B"]
+    feature_names = df["CONTROLN"]
 
     from sklearn import preprocessing
     le = preprocessing.LabelEncoder()

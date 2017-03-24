@@ -3,10 +3,9 @@ import numpy as np
 from sklearn import datasets
 from sklearn.utils import shuffle
 
-from load import loadAmazonTrain, loadCongressTrain
-from load import loadAmazonTest
+from load import loadAmazonTrain, loadCongressTrain, loadAmazonTest, loadKddTrain
 from util import getRandomState
-from classifier import kNN, decisionTreeGini, decisionTreeEntropy, decisionTreePrePruning1, decisionTreePrePruning2, randomForrest, SVC, LinarSVC
+from classifier import kNN, decisionTreeGini, decisionTreeEntropy, decisionTreePrePruning1, decisionTreePrePruning2, randomForrest, randomForrestParams, SVC, LinarSVC
 from classifier import naiveBayes
 from classifier import perceptron
 from mlPrint import printHeaderDataset
@@ -24,6 +23,23 @@ def runAllClassifier(data, target):
     LinarSVC(data, target)
     naiveBayes(data, target)
     perceptron(data, target)
+    return
+
+def RunAmazonClassifiers(data, target):
+
+    #for e in np.linspace(1000,10000, dtype=np.dtype(np.int16)):
+    #for e in [10000,30000]:
+    for e in [6000]:
+        randomForrestParams(data, target,e=e)
+
+
+    return
+
+def RunCongressClassifiers(data, target):
+
+    for penaltyC in range(1, 100):
+        LinarSVC(data, target,penaltyC)
+
     return
 
 def loadIris():
@@ -52,11 +68,15 @@ def loadBreastCancer():
     return [data, target]
 
 
-dataset = loadCongressTrain()
-runAllClassifier(dataset.data, dataset.target)
-# dataset = loadAmazonTrain()
-# LinarSVC(dataset.data, dataset.target)
-# randomForrest(dataset.data, dataset.target)
+#dataset = loadCongressTrain()
+#RunCongressClassifiers(dataset.data, dataset.target)
+
+#dataset = loadAmazonTrain()
+#RunAmazonClassifiers(dataset.data, dataset.target)
+## LinarSVC(dataset.data, dataset.target)
+#ä randomForrest(dataset.data, dataset.target)
+
+dataset = loadKddTrain()
 
 
 
