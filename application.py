@@ -1,9 +1,11 @@
 # Import statements
 import numpy as np
-from sklearn import datasets
+import pandas as pd
+
+from sklearn import datasets, svm, ensemble
 from sklearn.utils import shuffle
 
-from load import loadAmazonTrain, loadCongressTrain, loadAmazonTest, loadKddTrain
+from load import loadCongressTrain, loadCongressTest, loadAmazonTrain, loadAmazonTest, loadKddTrain
 from util import getRandomState
 from classifier import kNN, decisionTreeGini, decisionTreeEntropy, decisionTreePrePruning1, decisionTreePrePruning2, randomForrest, randomForrestParams, SVC, LinarSVC
 from classifier import naiveBayes
@@ -35,48 +37,39 @@ def RunAmazonClassifiers(data, target):
 
     return
 
-def RunCongressClassifiers(data, target):
+def writeToFile(classifier, datasetTrain, datasetTest, filename, headers):
 
-    for penaltyC in range(1, 100):
-        LinarSVC(data, target,penaltyC)
+    classifier.fit(datasetTrain.data, datasetTrain.target)
+    result = classifier.predict(datasetTest.data)
+    resultTransformed = datasetTrain.le.inverse_transform(result)
 
+    text_file = open(filename, "w")
+    text_file.write(headers)
+    for i in range(0, len(resultTransformed)):
+        text_file.write("%s,%s" % (str(datasetTest.ids[i]), str(resultTransformed[i])))
+        if (i < len(resultTransformed) - 1):
+            text_file.write("\n")
+
+    text_file.close()
     return
 
-def loadIris():
-    # load the IRIS dataset
-    printHeaderDataset("IRIS")
-    dataSet = datasets.load_iris()
-    # Shuffle our input data
-    data, target = shuffle(dataSet.data, dataSet.target, random_state=getRandomState())
-    return [data, target]
+# datasetTrain = loadCongressTrain()
+# datasetTest = loadCongressTest()
+# classifier = svm.LinearSVC(C=34)
+# writeToFile(classifier, datasetTrain, datasetTest, "output/congress_linearSVC_C34.csv", "ID,class\n")
 
-def loadDigits():
-    # load the DIGITS dataset
-    printHeaderDataset("DIGITS")
-    dataSet = datasets.load_digits()
-    # Shuffle our input data
-    data, target = shuffle(dataSet.data, dataSet.target, random_state=getRandomState())
-    return [data, target]
-
-def loadBreastCancer():
-    # load the BEAST-CANCER dataset
-    printHeaderDataset("BREAST-CANCER")
-    dataSet = datasets.load_breast_cancer()
-
-    # Shuffle our input data
-    data, target = shuffle(dataSet.data, dataSet.target, random_state=getRandomState())
-    return [data, target]
+# datasetTrain = loadAmazonTrain()
+# datasetTest = loadAmazonTest()
+# classifier = ensemble.RandomForestClassifier(n_estimators=5000, max_features="sqrt")
+# writeToFile(classifier, datasetTrain, datasetTest, "output/amazon_randomForest.csv", "ID,class\n")
 
 
-#dataset = loadCongressTrain()
-#RunCongressClassifiers(dataset.data, dataset.target)
-
-#dataset = loadAmazonTrain()
-#RunAmazonClassifiers(dataset.data, dataset.target)
+# dataset = loadAmazonTrain()
+# RunAmazonClassifiers(dataset.data, dataset.target)
 ## LinarSVC(dataset.data, dataset.target)
 #ä randomForrest(dataset.data, dataset.target)
 
-dataset = loadKddTrain()
+# dataset = loadKddTrain()
 
 
 
