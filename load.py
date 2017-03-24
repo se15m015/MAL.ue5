@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.datasets.base import Bunch
 
-def loadCongressTrain():
+def loadCongress():
     filename = 'data/congress/CongressionalVotingID.shuf.train.csv'
 
     df = pd.read_csv(filename, header=0)
@@ -21,42 +21,60 @@ def loadCongressTrain():
     target = leTarget.transform(target_names);
     # print("Transformed labels (first elements: " + str(target[0:1000]))
 
-    ids = df._get_values[:, 0]
-    data = df._get_values[:, 2:]
+    training_ids = df._get_values[:, 0]
+    data_train = df._get_values[:, 2:]
 
     for i in range(0, len(feature_names)):
         leFeatures = preprocessing.LabelEncoder()
-        leFeatures.fit(data[:,i])
-        data[:,i] = leFeatures.transform(data[:,i])
+        leFeatures.fit(data_train[:,i])
+        data_train[:,i] = leFeatures.transform(data_train[:,i])
 
-    return Bunch(data=data, target=target,
-                 target_names=target_names,
-                 feature_names=feature_names,
-                 le=leTarget,
-                 ids=ids)
-
-def loadCongressTest():
     filename = 'data/congress/CongressionalVotingID.shuf.test.csv'
 
     df = pd.read_csv(filename, header=0)
 
-    original_headers = list(df.columns.values)
-    feature_names = original_headers[1:]
+    # original_headers = list(df.columns.values)
+    # feature_names = original_headers[1:]
 
-    ids = df._get_values[:, 0]
-    data = df._get_values[:, 1:]
+    test_ids = df._get_values[:, 0]
+    data_test = df._get_values[:, 1:]
 
-    from sklearn import preprocessing
     leFeatures = preprocessing.LabelEncoder()
-    leFeatures.fit(data[:,2])
+    leFeatures.fit(data_test[:,2])
     for i in range(0, len(feature_names)):
-        data[:,i] = leFeatures.transform(data[:,i])
+        data_test[:,i] = leFeatures.transform(data_test[:,i])
 
-    return Bunch(data=data,
+    return Bunch(data_train=data_train,
+                 data_test=data_test,
+                 target=target,
+                 target_names=target_names,
                  feature_names=feature_names,
-                 ids=ids)
+                 le=leTarget,
+                 training_ids=training_ids,
+                 test_ids=test_ids)
 
-def loadAmazonTrain():
+# def loadCongressTest():
+#     filename = 'data/congress/CongressionalVotingID.shuf.test.csv'
+#
+#     df = pd.read_csv(filename, header=0)
+#
+#     original_headers = list(df.columns.values)
+#     feature_names = original_headers[1:]
+#
+#     ids = df._get_values[:, 0]
+#     data = df._get_values[:, 1:]
+#
+#     from sklearn import preprocessing
+#     leFeatures = preprocessing.LabelEncoder()
+#     leFeatures.fit(data[:,2])
+#     for i in range(0, len(feature_names)):
+#         data[:,i] = leFeatures.transform(data[:,i])
+#
+#     return Bunch(data=data,
+#                  feature_names=feature_names,
+#                  ids=ids)
+
+def loadAmazon():
     filename = 'data/amazon/phpr1uf8OID.800.train.csv'
 
     df = pd.read_csv(filename, header=0)
@@ -74,36 +92,48 @@ def loadAmazonTrain():
     target = le.transform(target_names);
     # print("Transformed labels (first elements: " + str(target[0:1000]))
 
-    ids = df._get_values[:, 0]
-    data = df._get_values[:, 1:-1]
+    training_ids = df._get_values[:, 0]
+    data_train = df._get_values[:, 1:-1]
 
-    return Bunch(data=data, target=target,
-                 target_names=target_names,
-                 feature_names=feature_names,
-                 le=le,
-                 ids=ids)
-
-
-def loadAmazonTest():
     filename = 'data/amazon/phpr1uf8OID.700.test.csv'
 
     df = pd.read_csv(filename, header=0)
 
-    original_headers = list(df.columns.values)
-    feature_names = original_headers[1:]
+    # original_headers = list(df.columns.values)
+    # feature_names = original_headers[1:]
 
-    ids = df._get_values[:, 0]
-    data = df._get_values[:, 1:]
+    test_ids = df._get_values[:, 0]
+    data_test = df._get_values[:, 1:]
 
-    return Bunch(data=data,
+    return Bunch(data_train=data_train,
+                 data_test=data_test,
+                 target=target,
+                 target_names=target_names,
                  feature_names=feature_names,
-                 ids=ids)
+                 le=le,
+                 training_ids=training_ids,
+                 test_ids=test_ids)
+
+
+# def loadAmazonTest():
+#     filename = 'data/amazon/phpr1uf8OID.700.test.csv'
+#
+#     df = pd.read_csv(filename, header=0)
+#
+#     original_headers = list(df.columns.values)
+#     feature_names = original_headers[1:]
+#
+#     ids = df._get_values[:, 0]
+#     data = df._get_values[:, 1:]
+#
+#     return Bunch(data=data,
+#                  feature_names=feature_names,
+#                  ids=ids)
 
 def loadKddTrain():
     filename = 'data/kdd/cup98LRN.5k.train_binary.csv'
 
     df = pd.read_csv(filename, header=0)
-
 
     original_headers = list(df.columns.values)
     feature_names = list(df.columns.values)
@@ -160,6 +190,6 @@ def loadKddTrain():
                  ids=ids)
 
 
-# loadKddTrain()
+loadKddTrain()
 # loadCongressTrain()
-loadCongressTest()
+# loadCongressTest()

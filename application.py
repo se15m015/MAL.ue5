@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn import datasets, svm, ensemble
 from sklearn.utils import shuffle
 
-from load import loadCongressTrain, loadCongressTest, loadAmazonTrain, loadAmazonTest, loadKddTrain
+from load import loadCongress, loadAmazon, loadKddTrain
 from util import getRandomState
 from classifier import kNN, decisionTreeGini, decisionTreeEntropy, decisionTreePrePruning1, decisionTreePrePruning2, randomForrest, randomForrestParams, SVC, LinarSVC
 from classifier import naiveBayes
@@ -37,32 +37,29 @@ def RunAmazonClassifiers(data, target):
 
     return
 
-def writeToFile(classifier, datasetTrain, datasetTest, filename, headers):
+def writeToFile(classifier, dataset, filename, headers):
 
-    classifier.fit(datasetTrain.data, datasetTrain.target)
-    result = classifier.predict(datasetTest.data)
-    resultTransformed = datasetTrain.le.inverse_transform(result)
+    classifier.fit(dataset.data_train, dataset.target)
+    result = classifier.predict(dataset.data_test)
+    resultTransformed = dataset.le.inverse_transform(result)
 
     text_file = open(filename, "w")
     text_file.write(headers)
     for i in range(0, len(resultTransformed)):
-        text_file.write("%s,%s" % (str(datasetTest.ids[i]), str(resultTransformed[i])))
-        if (i < len(resultTransformed) - 1):
+        text_file.write("%s,%s" % (str(dataset.test_ids[i]), str(resultTransformed[i])))
+        if i < len(resultTransformed) - 1:
             text_file.write("\n")
 
     text_file.close()
     return
 
-# datasetTrain = loadCongressTrain()
-# datasetTest = loadCongressTest()
+# dataset = loadCongress()
 # classifier = svm.LinearSVC(C=34)
-# writeToFile(classifier, datasetTrain, datasetTest, "output/congress_linearSVC_C34.csv", "ID,class\n")
-
-# datasetTrain = loadAmazonTrain()
-# datasetTest = loadAmazonTest()
+# writeToFile(classifier, dataset, "output/congress_linearSVC_C34.csv", "ID,class\n")
+#
+# dataset = loadAmazon()
 # classifier = ensemble.RandomForestClassifier(n_estimators=5000, max_features="sqrt")
-# writeToFile(classifier, datasetTrain, datasetTest, "output/amazon_randomForest.csv", "ID,class\n")
-
+# writeToFile(classifier, dataset, "output/amazon_randomForest.csv", "ID,class\n")
 
 # dataset = loadAmazonTrain()
 # RunAmazonClassifiers(dataset.data, dataset.target)
