@@ -30,6 +30,18 @@ def kNN(data, target):
             printKNNFold(k, weight, accSum, precisionSum, recallSum, time_trainSum, time_testSum)
     return
 
+def kNNParams(data, target, k=5, weight="uniform"):
+    # parameters for k-NN
+
+    # train the k-NN
+    classifier = neighbors.KNeighborsClassifier(k, weights=weight)
+
+    #Fold 5
+    accSum, precisionSum, recallSum, time_trainSum, time_testSum = fold5(data, target, classifier)
+
+    printKNNFold(k, weight, accSum, precisionSum, recallSum, time_trainSum, time_testSum)
+    return
+
 def decisionTreeGini(data, target):
     decisionTree(data, target, "gini")
     return
@@ -69,8 +81,8 @@ def decisionTree(data, target, criterion="gini", minWeightFractionLeaf=0, minSam
     return
 
 def randomForrest(data, target):
-    n_estimators = [500, 5000]
-    max_features = ["sqrt"]
+    n_estimators = [20, 50]
+    max_features = ["sqrt", "log2", 3]
 
     for e in n_estimators:
         for f in max_features:

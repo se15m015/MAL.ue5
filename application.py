@@ -5,9 +5,10 @@ import pandas as pd
 from sklearn import datasets, svm, ensemble
 from sklearn.utils import shuffle
 
-from load import loadCongress, loadAmazon, loadKddTrain
+from load import loadCongress, loadAmazon, loadACI, loadKdd
 from util import getRandomState
-from classifier import kNN, decisionTreeGini, decisionTreeEntropy, decisionTreePrePruning1, decisionTreePrePruning2, randomForrest, randomForrestParams, SVC, LinarSVC
+from classifier import kNN, decisionTreeGini, decisionTreeEntropy, decisionTreePrePruning1, decisionTreePrePruning2, randomForrest, randomForrestParams, SVC, LinarSVC, \
+    kNNParams, decisionTree
 from classifier import naiveBayes
 from classifier import perceptron
 from mlPrint import printHeaderDataset
@@ -33,8 +34,26 @@ def RunAmazonClassifiers(data, target):
     #for e in [10000,30000]:
     for e in [6000]:
         randomForrestParams(data, target,e=e)
+    return
 
+def RunKDDClassifiers(data, target):
 
+    for k in range(20,150):
+        kNNParams(data, target,  k, weight="uniform")
+
+    for minWeightFractionLeaf in np.linspace(0,0.5):
+        for minSamplesLeaf in range(1, 50):
+            decisionTree(data, target, criterion="gini", minWeightFractionLeaf=minWeightFractionLeaf, minSamplesLeaf=minSamplesLeaf, maxDepth=None)
+    return
+
+def RunACIClassifiers(data, target):
+
+    for k in range(20,150):
+        kNNParams(data, target,  k, weight="uniform")
+
+    for minWeightFractionLeaf in np.linspace(0,0.5):
+        for minSamplesLeaf in range(1, 50):
+            decisionTree(data, target, criterion="gini", minWeightFractionLeaf=minWeightFractionLeaf, minSamplesLeaf=minSamplesLeaf, maxDepth=None)
     return
 
 def writeToFile(classifier, dataset, filename, headers):
@@ -53,22 +72,29 @@ def writeToFile(classifier, dataset, filename, headers):
     text_file.close()
     return
 
-dataset = loadCongress()
-classifier = svm.LinearSVC(C=34)
-writeToFile(classifier, dataset, "output/congress_linearSVC_C34.csv", "ID,class\n")
-
-dataset = loadAmazon()
-classifier = ensemble.RandomForestClassifier(n_estimators=5000, max_features="sqrt")
-writeToFile(classifier, dataset, "output/amazon_randomForest.csv", "ID,class\n")
-
-# dataset = loadAmazonTrain()
-# RunAmazonClassifiers(dataset.data, dataset.target)
-## LinarSVC(dataset.data, dataset.target)
-#ä randomForrest(dataset.data, dataset.target)
-
-# dataset = loadKddTrain()
+# dataset = loadCongress()
+# classifier = svm.LinearSVC(C=34)
+# writeToFile(classifier, dataset, "output/congress_linearSVC_C34.csv", "ID,class\n")
+#
+# dataset = loadAmazon()
+# classifier = ensemble.RandomForestClassifier(n_estimators=5000, max_features="sqrt")
+# writeToFile(classifier, dataset, "output/amazon_randomForest.csv", "ID,class\n")
 
 
+# dataset = loadAmazon()
+# RunAmazonClassifiers(dataset.data_train, dataset.target)
+## LinarSVC(dataset.data_train, dataset.target)
+#ä randomForrest(dataset.data_train, dataset.target)
+
+dataset = loadKdd()
+RunKDDClassifiers(dataset.data_train, dataset.target)
+
+# runAllClassifier(dataset.data_train, dataset.target)
+
+
+# dataset = loadACI()
+# RunACIClassifiers(dataset.data_train, dataset.target)
+# runAllClassifier(dataset.data_train, dataset.target)
 
 
 
