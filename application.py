@@ -46,20 +46,20 @@ def writeToFile(classifier, dataset, filename, headers):
     text_file = open(filename, "w")
     text_file.write(headers)
     for i in range(0, len(resultTransformed)):
-        text_file.write("%s,%s" % (str(dataset.test_ids[i]), str(resultTransformed[i])))
+        text_file.write("%s,%s" % (str(dataset.ids_test[i]), str(resultTransformed[i])))
         if i < len(resultTransformed) - 1:
             text_file.write("\n")
 
     text_file.close()
     return
 
-# dataset = loadCongress()
-# classifier = svm.LinearSVC(C=34)
-# writeToFile(classifier, dataset, "output/congress_linearSVC_C34.csv", "ID,class\n")
-#
-# dataset = loadAmazon()
-# classifier = ensemble.RandomForestClassifier(n_estimators=5000, max_features="sqrt")
-# writeToFile(classifier, dataset, "output/amazon_randomForest.csv", "ID,class\n")
+dataset = loadCongress()
+classifier = svm.LinearSVC(C=34)
+writeToFile(classifier, dataset, "output/congress_linearSVC_C34.csv", "ID,class\n")
+
+dataset = loadAmazon()
+classifier = ensemble.RandomForestClassifier(n_estimators=5000, max_features="sqrt")
+writeToFile(classifier, dataset, "output/amazon_randomForest.csv", "ID,class\n")
 
 # dataset = loadAmazonTrain()
 # RunAmazonClassifiers(dataset.data, dataset.target)

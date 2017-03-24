@@ -21,7 +21,7 @@ def loadCongress():
     target = leTarget.transform(target_names);
     # print("Transformed labels (first elements: " + str(target[0:1000]))
 
-    training_ids = df._get_values[:, 0]
+    ids_train = df._get_values[:, 0]
     data_train = df._get_values[:, 2:]
 
     for i in range(0, len(feature_names)):
@@ -36,7 +36,7 @@ def loadCongress():
     # original_headers = list(df.columns.values)
     # feature_names = original_headers[1:]
 
-    test_ids = df._get_values[:, 0]
+    ids_test = df._get_values[:, 0]
     data_test = df._get_values[:, 1:]
 
     leFeatures = preprocessing.LabelEncoder()
@@ -50,8 +50,8 @@ def loadCongress():
                  target_names=target_names,
                  feature_names=feature_names,
                  le=leTarget,
-                 training_ids=training_ids,
-                 test_ids=test_ids)
+                 ids_train=ids_train,
+                 ids_test=ids_test)
 
 # def loadCongressTest():
 #     filename = 'data/congress/CongressionalVotingID.shuf.test.csv'
@@ -92,7 +92,7 @@ def loadAmazon():
     target = le.transform(target_names);
     # print("Transformed labels (first elements: " + str(target[0:1000]))
 
-    training_ids = df._get_values[:, 0]
+    ids_train = df._get_values[:, 0]
     data_train = df._get_values[:, 1:-1]
 
     filename = 'data/amazon/phpr1uf8OID.700.test.csv'
@@ -102,7 +102,7 @@ def loadAmazon():
     # original_headers = list(df.columns.values)
     # feature_names = original_headers[1:]
 
-    test_ids = df._get_values[:, 0]
+    ids_test = df._get_values[:, 0]
     data_test = df._get_values[:, 1:]
 
     return Bunch(data_train=data_train,
@@ -111,8 +111,8 @@ def loadAmazon():
                  target_names=target_names,
                  feature_names=feature_names,
                  le=le,
-                 training_ids=training_ids,
-                 test_ids=test_ids)
+                 ids_train=ids_train,
+                 ids_test=ids_test)
 
 
 # def loadAmazonTest():
@@ -140,22 +140,22 @@ def loadKddTrain():
     feature_names.remove("TARGET_B")
     feature_names.remove("CONTROLN")
     target_names = df["TARGET_B"]
-    ids = df["CONTROLN"]
+    ids_train = df["CONTROLN"]
 
     df.drop("TARGET_B", axis=1, inplace=True)
     df.drop("CONTROLN", axis=1, inplace=True)
 
-    data = df.get_values()
-    for col in df:
-        missingValuesCount = df[col].get_values().tolist().count(' ')
-        if missingValuesCount > 50:
-            print(col)
-            df.drop(col, axis=1, inplace=True)
+    data_train = df.get_values()
+
+    # for col in df:
+    #     missingValuesCount = df[col].get_values().tolist().count(' ')
+    #     if missingValuesCount > 1:
+    #         print(col)
+    #         df.drop(col, axis=1, inplace=True)
         # missingValuesCount = data[:, i].tolist().count(' ')
         # # print(original_headers[i])
         # if missingValuesCount > 50:
         #     df.drop(original_headers[i], axis=1, inplace=True)
-
 
     # for i in range(0, len(original_headers)):
     #     missingValuesCount = data[:, i].tolist().count(' ')
@@ -180,14 +180,17 @@ def loadKddTrain():
     target = le.transform(target_names);
     # print("Transformed labels (first elements: " + str(target[0:1000]))
 
-    ids = df._get_values[:, 0]
-    data = df._get_values[:, 1:-1]
+    data_test = data_train
+    ids_test = ids_train
 
-    return Bunch(data=data, target=target,
+    return Bunch(data_train=data_train,
+                 data_test=data_test,
+                 target=target,
                  target_names=target_names,
                  feature_names=feature_names,
                  le=le,
-                 ids=ids)
+                 ids_train=ids_train,
+                 ids_test=ids_test)
 
 
 loadKddTrain()
