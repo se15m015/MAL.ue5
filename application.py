@@ -7,7 +7,6 @@ from classifier import kNN, decisionTreeGini, decisionTreeEntropy, decisionTreeP
 from classifier import naiveBayes
 from classifier import perceptron
 from mlPrint import printHeaderDataset
-import pickle
 
 import csv
 
@@ -59,38 +58,7 @@ runAllClassifier(data, target)
 
 [data, target] = loadBreastCancer()
 runAllClassifier(data, target)
-#
-# from loadImages import loadImages
-# [data, dataOpenCV_1D, dataOpenCV_2D, dataOpenCV_3D, target] = loadImages()
-#
-# printHeaderDataset("IMAGES")
-#
-# printHeaderDataset("data")
-# runAllClassifier(np.asarray(data), target)
-# printHeaderDataset("dataOpenCV_1D")
-# runAllClassifier(np.asarray(dataOpenCV_1D), target)
-# printHeaderDataset("dataOpenCV_2D")
-# runAllClassifier(np.asarray(dataOpenCV_2D), target)
-# printHeaderDataset("dataOpenCV_3D")
-# runAllClassifier(np.asarray(dataOpenCV_3D), target)
-#
-#
-#
-#
-# from loadAudio import loadAudio
-# [data_bpm, data_bpm_statistics, data_chroma, data_mfcc, target] = loadAudio()
-#
-# printHeaderDataset("AUDIO")
 
-#Achtung - Audio data_bpm kann nicht mit dem RandomForrest Classifier ausgeführt werden, da data_bpm nur ein Feature hat.
-# RandomForrest muss bei diesem Datansatz auskommentiert werden.
-# printHeaderDataset("data_bpm")
-# runAllClassifier(np.asarray(data_bpm), target)
-# printHeaderDataset("data_bpm_statistics")
-# runAllClassifier(np.asarray(data_bpm_statistics), target)
-# printHeaderDataset("data_chroma")
-# runAllClassifier(np.asarray(data_chroma), target)
-# printHeaderDataset("data_mfcc")
-# runAllClassifier(np.asarray(data_mfcc), target)
+
 
 
