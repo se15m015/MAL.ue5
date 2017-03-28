@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-from sklearn import datasets, svm, ensemble, tree
+from sklearn import datasets, svm, ensemble, tree, neighbors
 from sklearn.utils import shuffle
 
 from load import loadCongress, loadAmazon, loadACI, loadKdd
@@ -64,10 +64,14 @@ def writeToFile(classifier, dataset, filename, headers):
 
     text_file = open(filename, "w")
     text_file.write(headers)
-    for i in range(0, len(resultTransformed)):
-        text_file.write("%s,%s" % (str(dataset.ids_test[i]), str(resultTransformed[i])))
-        if i < len(resultTransformed) - 1:
-            text_file.write("\n")
+    # for i in range(0, len(resultTransformed)):
+    #     text_file.write("%s,%s" % (str(dataset.ids_test[i]), str(resultTransformed[i])))
+    #     if i < len(resultTransformed) - 1:
+    #         text_file.write("\n")
+
+    for i, id in np.ndenumerate(dataset.ids_test):
+        text_file.write("\n")
+        text_file.write("%s,%s" % (str(id), str(resultTransformed[i])))
 
     text_file.close()
     return
@@ -86,16 +90,19 @@ def writeToFile(classifier, dataset, filename, headers):
 ## LinarSVC(dataset.data_train, dataset.target)
 #ä randomForrest(dataset.data_train, dataset.target)
 
-# dataset = loadKdd()
+dataset = loadKdd()
+classifier = neighbors.KNeighborsClassifier(13, weights="uniform")
+writeToFile(classifier, dataset, "output/kdd_knn-13-uniform.csv", "CONTROLN,TARGET_B")
 # RunKDDClassifiers(dataset.data_train, dataset.target)
-
 # runAllClassifier(dataset.data_train, dataset.target)
 
 
 
-dataset = loadACI()
-classifier = tree.DecisionTreeClassifier(criterion="gini", min_weight_fraction_leaf=0.1, min_samples_leaf=20, max_depth=None)
-writeToFile(classifier, dataset, "output/aci_decisionTree_gini_0.1_20_None.csv", "ID,moreThan50K\n")
+# dataset = loadACI()
+# classifier = neighbors.KNeighborsClassifier(30, weights="uniform")
+# writeToFile(classifier, dataset, "output/aci_knn-30-uniform.csv", "ID,moreThan50K")
+# classifier = tree.DecisionTreeClassifier(criterion="gini", min_weight_fraction_leaf=0.1, min_samples_leaf=20, max_depth=None)
+# writeToFile(classifier, dataset, "output/aci_decisionTree_gini_01_20_None.csv", "ID,moreThan50K")
 # RunACIClassifiers(dataset.data_train, dataset.target)
 # runAllClassifier(dataset.data_train, dataset.target)
 
