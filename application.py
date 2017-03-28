@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-from sklearn import datasets, svm, ensemble
+from sklearn import datasets, svm, ensemble, tree
 from sklearn.utils import shuffle
 
 from load import loadCongress, loadAmazon, loadACI, loadKdd
@@ -47,9 +47,9 @@ def RunKDDClassifiers(data, target):
     return
 
 def RunACIClassifiers(data, target):
-
-    for k in range(20,150):
-        kNNParams(data, target,  k, weight="uniform")
+    #
+    # for k in range(20,150):
+    #     kNNParams(data, target,  k, weight="uniform")
 
     for minWeightFractionLeaf in np.linspace(0,0.5):
         for minSamplesLeaf in range(1, 50):
@@ -86,13 +86,16 @@ def writeToFile(classifier, dataset, filename, headers):
 ## LinarSVC(dataset.data_train, dataset.target)
 #ä randomForrest(dataset.data_train, dataset.target)
 
-dataset = loadKdd()
-RunKDDClassifiers(dataset.data_train, dataset.target)
+# dataset = loadKdd()
+# RunKDDClassifiers(dataset.data_train, dataset.target)
 
 # runAllClassifier(dataset.data_train, dataset.target)
 
 
-# dataset = loadACI()
+
+dataset = loadACI()
+classifier = tree.DecisionTreeClassifier(criterion="gini", min_weight_fraction_leaf=0.1, min_samples_leaf=20, max_depth=None)
+writeToFile(classifier, dataset, "output/aci_decisionTree_gini_0.1_20_None.csv", "ID,moreThan50K\n")
 # RunACIClassifiers(dataset.data_train, dataset.target)
 # runAllClassifier(dataset.data_train, dataset.target)
 

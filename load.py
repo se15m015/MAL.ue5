@@ -119,6 +119,11 @@ def loadKddFile(filename):
 
     df.drop("TARGET_B", axis=1, inplace=True)
     df.drop("CONTROLN", axis=1, inplace=True)
+    # df.drop("NOEXCH", axis=1, inplace=True)
+
+    for a in df["NOEXCH"]:
+        if not a == 0:
+            print(str(a))
 
     from sklearn import preprocessing
     leFeatures = preprocessing.LabelEncoder()
@@ -154,7 +159,6 @@ def loadKddFile(filename):
             df = df.drop(df[df[index] == ' '].index)
 
     for index in df:
-        print(index)
         leFeatures = preprocessing.LabelEncoder()
         leFeatures.fit(df[index])
         df[index] = leFeatures.transform(df[index])
@@ -179,14 +183,15 @@ def loadKddFile(filename):
                  ids_test=ids_test)
 
 def loadACI():
-    filename = 'data/aci/adult.csv'
+    # filename = 'data/aci/adult.csv'
+    filename = 'data/aci/adult_ID.train.csv'
 
     df = pd.read_csv(filename, header=0)
 
     feature_names = list(df.columns.values)
-    target_names = df["income"]
-    feature_names.remove("income")
-    feature_names.remove("fnlwgt")
+    target_names = df["moreThan50K"]
+    feature_names.remove("moreThan50K")
+    feature_names.remove("ID")
 
     from sklearn import preprocessing
     leTarget = preprocessing.LabelEncoder()
@@ -197,15 +202,21 @@ def loadACI():
     target = leTarget.transform(target_names);
     # print("Transformed labels (first elements: " + str(target[0:1000]))
 
-    ids_train = df["fnlwgt"]
+    ids_train = df["ID"]
 
-    df.drop("income", axis=1, inplace=True)
-    df.drop("fnlwgt", axis=1, inplace=True)
+    df.drop("moreThan50K", axis=1, inplace=True)
+    df.drop("ID", axis=1, inplace=True)
 
     for index in df:
         missingCount = df[index].get_values().tolist().count('?')
         if missingCount > 1:
             df = df.drop(df[df[index] == '?'].index)
+            # target = np.delete(target,df[index] == '?',axis=0)
+            # target =  target.delete(df[df[index] == '?'].index)
+
+            for d in df[index]:
+                if d == '?':
+                    target = np.delete(target, d, axis=0)
 
     data_train = df.get_values()
     for i in range(0, len(feature_names)):
@@ -216,20 +227,25 @@ def loadACI():
     data_test = data_train
     ids_test = ids_train
 
-    # filename = 'data/congress/CongressionalVotingID.shuf.test.csv'
-    #
-    # df = pd.read_csv(filename, header=0)
-    #
-    # # original_headers = list(df.columns.values)
-    # # feature_names = original_headers[1:]
-    #
-    # ids_test = df._get_values[:, 0]
-    # data_test = df._get_values[:, 1:]
-    #
-    # leFeatures = preprocessing.LabelEncoder()
-    # leFeatures.fit(data_test[:,2])
-    # for i in range(0, len(feature_names)):
-    #     data_test[:,i] = leFeatures.transform(data_test[:,i])
+
+    filename = 'data/aci/adult_ID.test.csv'
+
+    df = pd.read_csv(filename, header=0)
+
+    ids_test = df["ID"]
+
+    df.drop("ID", axis=1, inplace=True)
+
+    for index in df:
+        missingCount = df[index].get_values().tolist().count('?')
+        if missingCount > 1:
+            df = df.drop(df[df[index] == '?'].index)
+
+    data_test = df.get_values()
+    for i in range(0, len(feature_names)):
+        leFeatures = preprocessing.LabelEncoder()
+        leFeatures.fit(data_test[:,i])
+        data_test[:,i] = leFeatures.transform(data_test[:,i])
 
     return Bunch(data_train=data_train,
                  data_test=data_test,
@@ -263,8 +279,8 @@ def loadKddFake():
     text_file.close()
     return
 
-loadKddFake()
+# loadKddFake()
 # loadACI()
-# loadKddTrain()
+# loadKdd()
 # loadCongressTrain()
 # loadCongressTest()

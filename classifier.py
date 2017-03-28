@@ -74,7 +74,7 @@ def decisionTree(data, target, criterion="gini", minWeightFractionLeaf=0, minSam
     #Fold 5
     acc, precision, recall, time_train, time_test = fold5(data, target, classifier)
 
-    printHeader("Decision Tree", "Fold 5", criterion)
+    printHeader("Decision Tree", "Fold 5", criterion, str(minWeightFractionLeaf), str(minSamplesLeaf), str(maxDepth))
     printFold(acc, precision, recall, time_train, time_test)
 
     # tree.export_graphviz(classifier, out_file="treePNG/tree-cir_%s-mWFL_%s-mSL_%s-mD_%s.dot" % (criterion, minWeightFractionLeaf, minSamplesLeaf, maxDepth))

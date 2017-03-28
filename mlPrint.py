@@ -51,10 +51,10 @@ def printFold(accSum, precisionSum, recallSum, time_trainSum, time_testSum):
     print()
     return
 
-def printHeader(text1="", text2="", text3=""):
+def printHeader(text1="", text2="", text3="", text4="", text5="", text6=""):
     print()
     print('--------------------------------')
-    print('              ' + text1 + ' - ' + text2 + ' - ' + text3)
+    print('              ' + text1 + ' - ' + text2 + ' - ' + text3 + ' - ' + text4 + ' - ' + text5 + ' - ' + text6)
     print('--------------------------------')
     print()
     return
