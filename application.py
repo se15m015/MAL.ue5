@@ -38,12 +38,15 @@ def RunAmazonClassifiers(data, target):
 
 def RunKDDClassifiers(data, target):
 
-    for k in range(20,150):
-        kNNParams(data, target,  k, weight="uniform")
-
-    for minWeightFractionLeaf in np.linspace(0,0.5):
-        for minSamplesLeaf in range(1, 50):
-            decisionTree(data, target, criterion="gini", minWeightFractionLeaf=minWeightFractionLeaf, minSamplesLeaf=minSamplesLeaf, maxDepth=None)
+    SVC(data, target)
+    decisionTreePrePruning1(data, target)
+    decisionTreePrePruning2(data, target)
+    # for k in range(20,150):
+    #     kNNParams(data, target,  k, weight="uniform")
+    #
+    # for minWeightFractionLeaf in np.linspace(0,0.5):
+    #     for minSamplesLeaf in range(1, 50):
+    #         decisionTree(data, target, criterion="gini", minWeightFractionLeaf=minWeightFractionLeaf, minSamplesLeaf=minSamplesLeaf, maxDepth=None)
     return
 
 def RunACIClassifiers(data, target):
@@ -76,6 +79,30 @@ def writeToFile(classifier, dataset, filename, headers):
     text_file.close()
     return
 
+
+def writeToFileKDD(classifier, dataset, filename, headers):
+
+    classifier.fit(dataset.data_train, dataset.target)
+    result = classifier.predict(dataset.data_test)
+    resultTransformed = dataset.le.inverse_transform(result)
+
+    text_file = open(filename, "w")
+    text_file.write(headers)
+    # for i in range(0, len(resultTransformed)):
+    #     text_file.write("%s,%s" % (str(dataset.ids_test[i]), str(resultTransformed[i])))
+    #     if i < len(resultTransformed) - 1:
+    #         text_file.write("\n")
+
+    for i, id in np.ndenumerate(dataset.ids_test):
+        text_file.write("\n")
+        if str(resultTransformed[i]) == '0':
+            text_file.write("%s,True" % (str(id)))
+        else:
+            text_file.write("%s,False" % (str(id)))
+
+    text_file.close()
+    return
+
 # dataset = loadCongress()
 # classifier = svm.LinearSVC(C=34)
 # writeToFile(classifier, dataset, "output/congress_linearSVC_C34.csv", "ID,class\n")
@@ -91,9 +118,10 @@ def writeToFile(classifier, dataset, filename, headers):
 #ä randomForrest(dataset.data_train, dataset.target)
 
 dataset = loadKdd()
-classifier = neighbors.KNeighborsClassifier(13, weights="uniform")
-writeToFile(classifier, dataset, "output/kdd_knn-13-uniform.csv", "CONTROLN,TARGET_B")
-# RunKDDClassifiers(dataset.data_train, dataset.target)
+#classifier = neighbors.KNeighborsClassifier(13, weights="uniform")
+classifier = svm.SVC()
+writeToFileKDD(classifier, dataset, "output/kdd_SVC.csv", "CONTROLN,TARGET_B")
+#RunKDDClassifiers(dataset.data_train, dataset.target)
 # runAllClassifier(dataset.data_train, dataset.target)
 
 

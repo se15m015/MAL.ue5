@@ -157,13 +157,15 @@ def loadKddFile(filenameTrain, filenameTest):
     for index in numbers:
         nan = np.count_nonzero(np.isnan(df_Train[index].get_values()))
         if nan > 1:
-            df_Train = df_Train.drop(df_Train[np.isnan(df_Train[index])].index)
-
-    # remove rows for objects
+            df_Train[index] = df_Train[index].fillna(df_Train[index].mean())
+            #df_Train = df_Train.drop(df_Train[np.isnan(df_Train[index])].index)
+    #
+    # # remove rows for objects
     for index in objects:
         missingCount = df_Train[index].get_values().tolist().count(' ')
         if missingCount > 1:
-            df_Train = df_Train.drop(df_Train[df_Train[index] == ' '].index)
+            df_Train[index] = df_Train[index].replace(' ', 'A', regex=True)
+            #df_Train = df_Train.drop(df_Train[df_Train[index] == ' '].index)
 
 
     original_headers = list(df_Train.columns.values)
@@ -187,11 +189,25 @@ def loadKddFile(filenameTrain, filenameTest):
     df_Test.drop("CONTROLN", axis=1, inplace=True)
 
     for index in df_Train:
+        if index == 'GEOCODE2':
+            df_Train[index] = df_Train[index].replace(np.nan, 'A', regex=True)
+
         leFeatures = preprocessing.LabelEncoder()
         leFeatures.fit(df_Train[index])
         df_Train[index] = leFeatures.transform(df_Train[index])
 
     for index in df_Test:
+        if df_Test[index].dtype != 'object':
+            missingCount = np.count_nonzero(np.isnan(df_Test[index].get_values().tolist()))
+            if missingCount > 1:
+                df_Test[index] = df_Test[index].fillna(df_Test[index].mean())
+                # df_Test[index].fillna()
+                #         df_Test[i:np.isnan(df_Test[index].get_values().tolist())] = 0
+        else:
+            missingCount = df_Test[index].get_values().tolist().count(np.nan)
+            if missingCount > 1:
+                df_Test[index] = df_Test[index].replace(np.nan, 'A', regex=True)
+
         leFeatures = preprocessing.LabelEncoder()
         leFeatures.fit(df_Test[index])
         df_Test[index] = leFeatures.transform(df_Test[index])
